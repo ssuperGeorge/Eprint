@@ -1,0 +1,150 @@
+body {
+	background: #222;
+	font-family: "AtlasGrotesk","Open Sans",sans-serif;
+}
+.sitewrapper {
+	width: 100%;
+}
+
+.video_backgroud {
+	position:relative;
+	z-index: -10;
+
+}
+
+.video {
+	display:none;
+	position:absolute;
+	width:100%;
+}
+
+#backup_img {
+	display: block;
+	position:absolute;
+	width:100%;
+}
+
+.navbar {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 16px;
+    letter-spacing: 10px;
+}
+
+.navbar-header > a {
+	font-size: 24px;
+}
+
+
+.container-fluid {
+    padding-top: 10%;
+}
+
+.main-header {
+	color: #fff;
+}
+
+.main-header > h1{
+	font-size: 50px;
+	padding-bottom: 36px;
+}
+
+.main-header > p {
+	font-size: 20px;
+	letter-spacing: 6px;
+    font-style: normal;
+    padding-bottom: 24px;
+}
+
+.btn-hover {
+	text-align: center;
+}
+
+.btn-hover > input{
+	border-radius: 8px;
+	border: 1px solid #fff;
+	font-size: 20px;
+	letter-spacing: 10px;
+	color: #fff;
+	padding: 10px 26px 10px 36px;
+	transition: background-color .25s ease-in-out;
+	background: transparent;
+}
+
+.btn-hover > input:hover{
+	background-color: #fff;
+	color: grey;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.modal-dialog {
+	margin-top: 15%;
+}
+
+.modal-content {
+	background: #222;
+	margin-right: 16%;
+	margin-left: 16%;
+}
+.modal-content > .nav-tabs{
+	padding-top: 3%;
+	padding-left: 30%;
+	margin-left: 10%;
+	margin-right: 10%;
+	border-bottom: 1px solid #666;
+
+}
+
+.modal-content>.nav>li.active>a {
+	color: #222;
+}
+.modal-content>.nav>li>a:hover {
+	color: #222;
+}
+.modal-content>.nav>li>a {
+	font-size: 16px;
+	padding: 10% 25%;
+	color: #fff;
+}
+
+.modal-footer {
+	border:none;
+	margin-top: 5%;
+	margin-bottom: 3%;
+}
+.modal-footer > .btn-hover > input{
+	font-size: 16px;
+}
+
+.modal-form{
+	margin-top: 6%;
+	margin-right: 10%;
+	margin-left: 10%;
+	margin-bottom: 5%;
+}
+
+.form-control {
+	width:100%;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	margin-right: 10px;
+	padding: 10px;
+	font-size: 16px;
+}
+
+.form-control::placeholder{
+	font-size: 16px;
+}
+
+.passcode{
+	font-size: 24px;
+}
+
+@media (min-width : 992px) {
+.video{display:block;}
+#backup_img{display:none}
+}
+
+
+
