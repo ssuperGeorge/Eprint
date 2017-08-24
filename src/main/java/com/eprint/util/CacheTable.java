@@ -1,5 +1,11 @@
 package com.eprint.util;
 
-public class CacheTable {
+import java.util.HashMap;
 
+public class CacheTable {
+	private final HashMap<String, String> internalTable;
+	
+	public CacheTable() {
+		internalTable = new HashMap<>();
+	}
 }
