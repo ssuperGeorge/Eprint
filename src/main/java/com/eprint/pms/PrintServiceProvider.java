@@ -1,9 +1,7 @@
 package com.eprint.pms;
 
-
 import javax.print.PrintService;
-import javax.print.attribute.standard.PrinterState;
-import javax.print.attribute.standard.PrinterStateReason;
+import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterStateReasons;
 import javax.print.event.PrintServiceAttributeEvent;
 import javax.print.event.PrintServiceAttributeListener;
@@ -32,7 +30,7 @@ public class PrintServiceProvider {
 	public boolean init() {
 		UnixPrintServiceLookup psLookup = new UnixPrintServiceLookup();
 		PrintService[] services = psLookup.getPrintServices();
-		String defaultPrinterName = "EPSON WF-3520 Series";
+		String defaultPrinterName = "EPSON_WF_3520_Series";
 		s_log.info(services.length + " services are discovered.");
 		for(PrintService service : services) {
 			if(defaultPrinterName.equals(service.getName())) {
@@ -43,10 +41,15 @@ public class PrintServiceProvider {
 	}
 	
 	public void start()	{
-		System.out.println(m_ps.getAttribute(PrinterStateReasons.class));
 		m_ps.addPrintServiceAttributeListener(new PrintServiceAttributeListener() {
+			final Class<PrinterStateReasons> m_category = PrinterStateReasons.class;
+			
 			@Override
 			public void attributeUpdate(PrintServiceAttributeEvent psae) {
+				PrintServiceAttributeSet attrSet = psae.getAttributes();
+				if(attrSet.containsKey(m_category)) {
+					System.out.println(attrSet.get(m_category));
+				}
 			}
 		});
 	}

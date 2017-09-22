@@ -33,7 +33,7 @@ import java.nio.charset.Charset;
 import java.util.HashSet;
 
 
-public class IPPPrintService implements PrintService {
+public class IPPPrintService implements PrintService, AttributeUpdater{
 
 	public static final boolean debugPrint;
 	private static final String debugPrefix = "IPPPrintService>> ";
@@ -956,16 +956,27 @@ public class IPPPrintService implements PrintService {
 		return false;
 	}
 
+	@Override
+	public synchronized PrintServiceAttributeSet updateAttribute() {
+		
+		return m_attrLookupService.getAttributeDiff(getAttributes());
+	}
 
-
+	@Override
+	public synchronized <T extends PrintServiceAttribute>  T getAttribute(Class<T> category) {
+			if (category == null) {
+				throw new NullPointerException("category");
+			}
+			initAttributes();
+			return m_attrLookupService.getAttribute(category, getAttMap);
+	}
 
 	public synchronized PrintServiceAttributeSet getAttributes() {
 		// update getAttMap by sending again get-attributes IPP request
 		init = false;
 		initAttributes();
 
-		HashPrintServiceAttributeSet attrs =
-				new HashPrintServiceAttributeSet();
+		HashPrintServiceAttributeSet attrs = new HashPrintServiceAttributeSet();
 
 		for(IPPServiceAttribute attr : serviceAttributes) {
 			if(getAttMap != null && getAttMap.containsKey(attr.getName())) {
@@ -975,7 +986,10 @@ public class IPPPrintService implements PrintService {
 				}
 			}
 		}
-		return AttributeSetUtilities.unmodifiableView(attrs);
+		
+		PrintServiceAttributeSet tmpAttr = AttributeSetUtilities.unmodifiableView(attrs);
+		m_attrLookupService.updateAttribute(tmpAttr);
+		return tmpAttr;
 	}
 
 	public boolean isIPPSupportedImages(String mimeType) {
@@ -1678,86 +1692,8 @@ public class IPPPrintService implements PrintService {
 		return this.getClass().hashCode()+getName().hashCode();
 	}
 
-
-	@Override
-	public synchronized <T extends PrintServiceAttribute>  T getAttribute(Class<T> category) {
-			if (category == null) {
-				throw new NullPointerException("category");
-			}
-
-			initAttributes();
-			
-			return m_attrLookupService.getAttribute(category, getAttMap);
-			
-//			
-//			
-//			if (category == PrinterInfo.class) {
-//				PrinterInfo pInfo = new PrinterInfo(printer, null);
-//				AttributeClass ac = (getAttMap != null) ?
-//						getAttMap.get(pInfo.getName())
-//						: null;
-//						if (ac != null) {
-//							return (T)(new PrinterInfo(ac.getStringValue(), null));
-//						}
-//						return (T)pInfo;
-//			} else if (category == QueuedJobCount.class) {
-//				QueuedJobCount qjc = new QueuedJobCount(0);
-//				AttributeClass ac = (getAttMap != null) ?
-//						getAttMap.get(qjc.getName())
-//						: null;
-//						if (ac != null) {
-//							qjc = new QueuedJobCount(ac.getIntValue());
-//						}
-//						return (T)qjc;
-//			} else if (category == PrinterIsAcceptingJobs.class) {
-//				PrinterIsAcceptingJobs accJob =
-//						PrinterIsAcceptingJobs.ACCEPTING_JOBS;
-//				AttributeClass ac = (getAttMap != null) ?
-//						getAttMap.get(accJob.getName())
-//						: null;
-//						if ((ac != null) && (ac.getByteValue() == 0)) {
-//							accJob = PrinterIsAcceptingJobs.NOT_ACCEPTING_JOBS;
-//						}
-//						return (T)accJob;
-//			} else if (category == ColorSupported.class) {
-//				ColorSupported cs = ColorSupported.SUPPORTED;
-//				AttributeClass ac = (getAttMap != null) ?
-//						getAttMap.get(cs.getName())
-//						: null;
-//						if ((ac != null) && (ac.getByteValue() == 0)) {
-//							cs = ColorSupported.NOT_SUPPORTED;
-//						}
-//						return (T)cs;
-//			} else if (category == PDLOverrideSupported.class) {
-//
-//				if (isCupsPrinter) {
-//					// Documented: For CUPS this will always be false
-//					return (T)PDLOverrideSupported.NOT_ATTEMPTED;
-//				} else {
-//					// REMIND: check attribute values
-//					return (T)PDLOverrideSupported.NOT_ATTEMPTED;
-//				}
-//			} else if(category == PrinterStateReasons.class) {
-//				PrinterStateReasons reasons = new PrinterStateReasons();
-//				AttributeClass ac = (getAttMap != null) ? getAttMap.get("printer-state-reasons"): null;
-//				String[] printerState;
-//				if(ac!=null && ( printerState = ac.getArrayOfStringValues())!=null) {
-//					for(String state : printerState) {
-//						String[] pair = state.split(PRINTER_STATE_DELIMITER);
-//						String stateReason = pair[0], serverity = pair[1];
-//						
-//						
-//					}
-//				}
-//				return (T) reasons;
-//			}
-//			return null;
-	}
-
-
 	@Override
 	public ServiceUIFactory getServiceUIFactory() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

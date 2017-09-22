@@ -77,35 +77,36 @@ class ServiceNotifier extends Thread {
 	 * of available time.
 	 */
 	public void run() {
-
 		long minSleepTime = 15000;
 		long sleepTime = 2000;
-		HashPrintServiceAttributeSet attrs;
-		PrintServiceAttributeEvent attrEvent;
-		PrintServiceAttributeListener listener;
-		PrintServiceAttributeSet psa;
-
+		
 		while (!stop) {
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
 			}
 			synchronized (this) {
-				if (listeners == null) {
+				if (listeners == null|| listeners.isEmpty()) {
 					continue;
 				}
 				long startTime = System.currentTimeMillis();
 				if (listeners != null) {
-					psa = service.getAttributes();
+					
+					PrintServiceAttributeSet psa;
+					if(service instanceof AttributeUpdater) {
+						psa = ((AttributeUpdater) service).updateAttribute(); 
+					}else {
+						psa = service.getAttributes();
+					}
+					
 					if (psa != null && !psa.isEmpty()) {
+						PrintServiceAttributeEvent attrEvent = new PrintServiceAttributeEvent(
+														service, 
+														new HashPrintServiceAttributeSet(psa));
+						
 						for (int i = 0; i < listeners.size() ; i++) {
-							listener = (PrintServiceAttributeListener)
-									listeners.get(i);
-							attrs =
-									new HashPrintServiceAttributeSet(psa);
-							attrEvent =
-									new PrintServiceAttributeEvent(service, attrs);
-							listener.attributeUpdate(attrEvent);
+							PrintServiceAttributeListener listener = (PrintServiceAttributeListener) listeners.get(i);
+							listener.attributeUpdate(attrEvent); 
 						}
 					}
 				}
@@ -116,5 +117,4 @@ class ServiceNotifier extends Thread {
 			}
 		}
 	}
-
 }
