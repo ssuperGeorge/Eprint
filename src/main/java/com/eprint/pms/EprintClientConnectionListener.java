@@ -11,7 +11,7 @@ public class EprintClientConnectionListener implements ConnectionListener{
 	
 	@Override
 	public void authenticated(XMPPConnection connection, boolean arg1) {
-		s_log.info("logged in: "+connection.getUser().asEntityBareJidString());
+		s_log.info("logged in: " + connection.getUser().asBareJid());
 	}
 
 	@Override

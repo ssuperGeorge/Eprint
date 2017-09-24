@@ -41,7 +41,7 @@ public class EprintClient {
 		}
 
 		// Local printer discovery
-		if(connection !=null) {
+		if(connection !=null && connection.isConnected() && connection.isAuthenticated()) {
 			s_log.info("Start to discover any local printer");
 			PMSSender sender = new PMSSenderImpl(connection);
 			m_psp = PrintServiceProvider.create(sender);

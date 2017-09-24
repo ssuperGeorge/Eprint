@@ -104,8 +104,7 @@ class ServiceNotifier extends Thread {
 														service, 
 														new HashPrintServiceAttributeSet(psa));
 						
-						for (int i = 0; i < listeners.size() ; i++) {
-							PrintServiceAttributeListener listener = (PrintServiceAttributeListener) listeners.get(i);
+						for (PrintServiceAttributeListener listener : listeners) {
 							listener.attributeUpdate(attrEvent); 
 						}
 					}

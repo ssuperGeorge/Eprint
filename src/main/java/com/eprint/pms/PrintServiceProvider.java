@@ -9,6 +9,7 @@ import javax.print.event.PrintServiceAttributeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.eprint.datamodel.PrinterInfo;
 import com.eprint.print.UnixPrintServiceLookup;
 
 public class PrintServiceProvider {
@@ -41,6 +42,8 @@ public class PrintServiceProvider {
 	}
 	
 	public void start()	{
+		
+		m_sender.sendStateChange(new PrinterInfo().printerStatus("online"), null);
 		m_ps.addPrintServiceAttributeListener(new PrintServiceAttributeListener() {
 			final Class<PrinterStateReasons> m_category = PrinterStateReasons.class;
 			
@@ -48,7 +51,12 @@ public class PrintServiceProvider {
 			public void attributeUpdate(PrintServiceAttributeEvent psae) {
 				PrintServiceAttributeSet attrSet = psae.getAttributes();
 				if(attrSet.containsKey(m_category)) {
-					System.out.println(attrSet.get(m_category));
+					String change = attrSet.get(m_category).toString();
+					s_log.info("Attribute: "+m_category.getName()+" changed to state: "+change);
+					
+					PrinterInfo info = new PrinterInfo().printerStatus(change);
+					
+					m_sender.sendStateChange(info, null);
 				}
 			}
 		});
