@@ -42,7 +42,6 @@ public class PrintServiceProvider {
 	}
 	
 	public void start()	{
-		
 		m_sender.sendStateChange(new PrinterInfo().printerStatus("online"), null);
 		m_ps.addPrintServiceAttributeListener(new PrintServiceAttributeListener() {
 			final Class<PrinterStateReasons> m_category = PrinterStateReasons.class;

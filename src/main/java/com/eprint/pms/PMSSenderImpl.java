@@ -21,7 +21,6 @@ public class PMSSenderImpl implements PMSSender{
 
 	@Override
 	public void sendStateChange(PrinterInfo info, Callback callback) {
-		
 		try {
 			PrinterState ps = new PrinterState();
 			ps.from(m_connection.getUser().asBareJid())

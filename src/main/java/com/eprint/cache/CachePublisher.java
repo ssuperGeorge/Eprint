@@ -19,7 +19,11 @@ public class CachePublisher<K, V> implements Listener<V> {
 	
 	private CacheTable<K, V> m_cacheTable;
 	
-	public CachePublisher(Extractor<V, K> keyExtractor) {
+	public static <K, V> CachePublisher<K, V> create(Extractor<V, K> uniqueKey){
+		return new CachePublisher<K, V>(uniqueKey);
+	}
+	
+	private  CachePublisher(Extractor<V, K> keyExtractor) {
 		m_cacheTable = new LocalCacheTable();
 		m_keyExtractor = keyExtractor;
 	}
